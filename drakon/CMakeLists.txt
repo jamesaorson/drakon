@@ -21,7 +21,7 @@ else()
     message(FATAL_ERROR "Unsupported operating system")
 endif()
 
-add_library(drakon STATIC ${COMMON_HEADERS} ${COMMON_SOURCES} ${OS_SOURCES})
+add_library(drakon STATIC ${COMMON_HEADERS} ${COMMON_SOURCES} ${OS_SOURCES} "include/drakon/Renderer.h" "src/drakon/windows/Renderer.cpp" "src/drakon/common/Renderer.cpp")
 
 # Add include directories for the project.
 
@@ -48,6 +48,6 @@ if (WIN32 AND DRAKON_USE_GDK)
 
     target_include_directories(drakon PRIVATE ${GDK_GAMEKIT_INCLUDE_DIR} ${GDK_GAMERUNTIME_INCLUDE_DIR})
     target_link_directories(drakon PUBLIC ${GDK_GAMEKIT_LIB_DIR} ${GDK_GAMERUNTIME_LIB_DIR})
-    target_link_libraries(drakon PUBLIC GameInput.lib xgameruntime.lib)
+    target_link_libraries(drakon PUBLIC GameInput.lib xgameruntime.lib d3d12.lib dxgi.lib)
     target_compile_definitions(drakon PUBLIC DRAKON_USE_GDK=1)
 endif()

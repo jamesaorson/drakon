@@ -1,5 +1,6 @@
 #pragma once
 
+#include <drakon/Renderer.h>
 #include <string>
 
 namespace drakon {
@@ -16,6 +17,10 @@ namespace drakon {
 		void run();
 		void cleanup();
 	protected:
+		bool isRunning = true;
+		std::string title = "Drakon Game";
+		drakon::Renderer renderer;
+
 		// OS and render engine specific window creation logic
 		int makeWindow();
 		void processEvents();
@@ -23,8 +28,5 @@ namespace drakon {
 		virtual void init() {}
 		virtual void tick(const Delta delta) = 0;
 		virtual void done() {}
-
-		bool isRunning = true;
-		std::string title = "Drakon Game";
 	};
 }

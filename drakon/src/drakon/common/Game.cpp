@@ -7,7 +7,10 @@ void drakon::Game::run()
 	// Init before tracking time
 	this->init();
 
-	this->makeWindow();
+	if (this->makeWindow() != 0) {
+		this->cleanup();
+		return;
+	}
 
 	auto startTime = std::chrono::steady_clock::now();
 	drakon::Delta delta = 0;
@@ -19,6 +22,7 @@ void drakon::Game::run()
 		this->processEvents();
 		// First frame will always have a near-0 value
 		this->tick(delta);
+		this->renderer.render();
 	}
 	this->done();
 	this->cleanup();

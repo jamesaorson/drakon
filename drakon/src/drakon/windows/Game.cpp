@@ -88,11 +88,18 @@ int drakon::Game::makeWindow()
     SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
     ShowWindow(hwnd, SW_SHOW);
 
+	if (!this->renderer.init(hwnd)) {
+		std::cerr << "Failed to initialize renderer." << std::endl;
+		return 1;
+	}
+
 	std::cout << "Microsoft GDK runtime initialized." << std::endl;
+	return 0;
 }
 
 void drakon::Game::cleanup()
 {
+	this->renderer.cleanup();
 	XGameRuntimeUninitialize();
 	std::cout << "Microsoft GDK runtime uninitialized." << std::endl;
 }
