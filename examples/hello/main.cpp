@@ -1,15 +1,8 @@
-﻿#include <drakon/Game.h>
-
+﻿#include <cstring>
 #include <iostream>
 
-struct TriangleRenderable : public drakon::Renderable {
-#if defined(WIN32) || defined(_WIN64)
-	void draw(ID3D12GraphicsCommandList& commandList) override {
-		// Record commands to render a triangle here
-		
-	}
-#endif
-};
+#include <drakon/Game.h>
+#include "renderables/TriangleRenderable.h"
 
 struct Game : public drakon::Game {
 	// Inherit constructors

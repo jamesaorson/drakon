@@ -210,6 +210,21 @@ bool drakon::Renderer::render(std::vector<Renderable*> renderables) {
 	rtvHandle.ptr += static_cast<unsigned long long>(this->frameIndex) * this->rtvDescriptorSize;
 
 	this->commandList->ClearRenderTargetView(rtvHandle, this->clearColor.data(), 0, nullptr);
+
+	/*
+		This binds the current back buffer as the render target and sets a viewport / scissor
+		that matches the window size before issuing draw calls.That makes sure any draw calls
+		have a valid render target and raster state, otherwise nothing would show up.
+	*/
+	this->commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+
+	D3D12_VIEWPORT viewport = { 0.0f, 0.0f,
+		static_cast<float>(this->windowWidth),
+		static_cast<float>(this->windowHeight),
+		0.0f, 1.0f };
+	D3D12_RECT scissorRect = { 0, 0, static_cast<LONG>(this->windowWidth), static_cast<LONG>(this->windowHeight) };
+	this->commandList->RSSetViewports(1, &viewport);
+	this->commandList->RSSetScissorRects(1, &scissorRect);
 	for (auto& renderable : renderables) {
 		if (!renderable) continue;
 		renderable->draw(*this->commandList.Get());
