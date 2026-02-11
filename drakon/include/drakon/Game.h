@@ -1,14 +1,11 @@
 #pragma once
 
 #include <drakon/Renderer.h>
+#include <drakon/Renderable.h>
 #include <string>
 
 namespace drakon {
-#if defined(_WIN32) && !defined(_WIN64) || defined(__i386__) || defined(i386)
 	typedef float Delta;
-#else
-	typedef double Delta;
-#endif
 
 	struct Game {
 		Game() = default;
@@ -20,6 +17,7 @@ namespace drakon {
 		bool isRunning = true;
 		std::string title = "Drakon Game";
 		drakon::Renderer renderer;
+		std::vector<Renderable*> renderables;
 
 		// OS and render engine specific window creation logic
 		int makeWindow();

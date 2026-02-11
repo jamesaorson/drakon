@@ -21,7 +21,7 @@ else()
     message(FATAL_ERROR "Unsupported operating system")
 endif()
 
-add_library(drakon STATIC ${COMMON_HEADERS} ${COMMON_SOURCES} ${OS_SOURCES} "include/drakon/Renderer.h" "src/drakon/windows/Renderer.cpp" "src/drakon/common/Renderer.cpp")
+add_library(drakon STATIC ${COMMON_HEADERS} ${COMMON_SOURCES} ${OS_SOURCES} "include/drakon/Renderer.h" "src/drakon/windows/Renderer.cpp" "src/drakon/common/Renderer.cpp" "include/drakon/Renderable.h" )
 
 # Add include directories for the project.
 

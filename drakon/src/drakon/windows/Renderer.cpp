@@ -3,6 +3,7 @@
 #include <drakon/Renderer.h>
 
 #include <iostream>
+#include <utility>
 
 bool drakon::Renderer::createCommandObjects() {
 	HRESULT hr = this->d3dDevice->CreateCommandAllocator(
@@ -193,7 +194,7 @@ bool drakon::Renderer::init(HWND hwnd) {
 	return true;
 }
 
-bool drakon::Renderer::render() {
+bool drakon::Renderer::render(std::vector<Renderable*> renderables) {
 	this->commandAllocator->Reset();
 	this->commandList->Reset(this->commandAllocator.Get(), nullptr);
 
@@ -206,9 +207,13 @@ bool drakon::Renderer::render() {
 	this->commandList->ResourceBarrier(1, &barrier);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = this->rtvHeap->GetCPUDescriptorHandleForHeapStart();
-	rtvHandle.ptr += this->frameIndex * this->rtvDescriptorSize;
+	rtvHandle.ptr += static_cast<unsigned long long>(this->frameIndex) * this->rtvDescriptorSize;
 
 	this->commandList->ClearRenderTargetView(rtvHandle, this->clearColor.data(), 0, nullptr);
+	for (auto& renderable : renderables) {
+		if (!renderable) continue;
+		renderable->draw(*this->commandList.Get());
+	}
 
 	std::swap(barrier.Transition.StateBefore, barrier.Transition.StateAfter);
 	this->commandList->ResourceBarrier(1, &barrier);

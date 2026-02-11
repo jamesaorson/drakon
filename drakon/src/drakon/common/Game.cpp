@@ -22,7 +22,7 @@ void drakon::Game::run()
 		this->processEvents();
 		// First frame will always have a near-0 value
 		this->tick(delta);
-		this->renderer.render();
+		this->renderer.render(this->renderables);
 	}
 	this->done();
 	this->cleanup();

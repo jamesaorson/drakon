@@ -2,11 +2,26 @@
 
 #include <iostream>
 
+struct TriangleRenderable : public drakon::Renderable {
+#if defined(WIN32) || defined(_WIN64)
+	void draw(ID3D12GraphicsCommandList& commandList) override {
+		// Record commands to render a triangle here
+		
+	}
+#endif
+};
+
 struct Game : public drakon::Game {
 	// Inherit constructors
 	using drakon::Game::Game;
 
 	std::array<float, 4> clearColorDirection = { 0.1f, 0.2f, 0.3f, 0.0f };
+
+	void init() override
+	{
+		std::cout << "Initializing game" << std::endl;
+		this->renderables.push_back(new TriangleRenderable);
+	}
 
 	void tick(const drakon::Delta delta) override
 	{

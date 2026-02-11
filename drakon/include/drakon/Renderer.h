@@ -1,6 +1,10 @@
 #pragma once
 
 #include <array>
+#include <functional>
+#include <vector>
+
+#include <drakon/Renderable.h>
 
 #if defined(WIN32) || defined(_WIN64)
 #include <Windows.h>
@@ -12,7 +16,7 @@
 namespace drakon {
 	struct Renderer {
 		virtual ~Renderer() = default;
-		bool render();
+		bool render(std::vector<Renderable*> renderables);
 		bool cleanup();
 		void setClearColor(const std::array<float, 4> clearColor);
 		std::array<float, 4>& getClearColor();
