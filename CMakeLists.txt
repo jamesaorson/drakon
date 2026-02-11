@@ -13,3 +13,4 @@ project ("drakon")
 
 # Include sub-projects.
 add_subdirectory ("drakon")
+add_subdirectory ("examples")
