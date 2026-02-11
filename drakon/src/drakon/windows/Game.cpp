@@ -1,10 +1,10 @@
+#if defined(WIN32) || defined(_WIN64)
+
 #include <drakon/Game.h>
 
 #include <iostream>
 
-#if defined(DRAKON_USE_GDK)
 #include <Windows.h>
-#include <XGameRuntimeInit.h>
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -58,12 +58,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 int drakon::Game::makeWindow()
 {
-	HRESULT hr = XGameRuntimeInitialize();
-	if (FAILED(hr)) {
-		std::cerr << "XGameRuntimeInitialize failed: 0x" << std::hex << hr << std::dec << std::endl;
-		return 1;
-	}
-
 	// Default main thread to CPU 0
 	SetThreadAffinityMask(GetCurrentThread(), 0x1);
 
@@ -93,15 +87,12 @@ int drakon::Game::makeWindow()
 		return 1;
 	}
 
-	std::cout << "Microsoft GDK runtime initialized." << std::endl;
 	return 0;
 }
 
 void drakon::Game::cleanup()
 {
 	this->renderer.cleanup();
-	XGameRuntimeUninitialize();
-	std::cout << "Microsoft GDK runtime uninitialized." << std::endl;
 }
 
 void drakon::Game::processEvents()

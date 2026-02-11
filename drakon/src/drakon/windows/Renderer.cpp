@@ -1,8 +1,9 @@
+#if defined(WIN32) || defined(_WIN64)
+
 #include <drakon/Renderer.h>
 
 #include <iostream>
 
-#if defined(DRAKON_USE_GDK)
 bool drakon::Renderer::createCommandObjects() {
 	HRESULT hr = this->d3dDevice->CreateCommandAllocator(
 		D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&this->commandAllocator));

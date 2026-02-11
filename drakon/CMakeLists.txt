@@ -32,22 +32,6 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
 endif()
 
 # Windows
-
-option(DRAKON_USE_GDK "Enable Microsoft GDK (PC)" ON)
-
-if (WIN32 AND DRAKON_USE_GDK)
-    if (NOT DEFINED GDK_ROOT)
-        set(GDK_ROOT "C:/Program Files (x86)/Microsoft GDK/251001" CACHE PATH "Microsoft GDK root")
-    endif()
-
-    set(GDK_GRDK_DIR "${GDK_ROOT}/GRDK")
-    set(GDK_GAMEKIT_INCLUDE_DIR "${GDK_GRDK_DIR}/GameKit/Include")
-    set(GDK_GAMERUNTIME_INCLUDE_DIR "${GDK_GRDK_DIR}/GameRuntime/Include")
-    set(GDK_GAMEKIT_LIB_DIR "${GDK_GRDK_DIR}/GameKit/Lib/amd64")
-    set(GDK_GAMERUNTIME_LIB_DIR "${GDK_GRDK_DIR}/GameRuntime/Lib/amd64")
-
-    target_include_directories(drakon PRIVATE ${GDK_GAMEKIT_INCLUDE_DIR} ${GDK_GAMERUNTIME_INCLUDE_DIR})
-    target_link_directories(drakon PUBLIC ${GDK_GAMEKIT_LIB_DIR} ${GDK_GAMERUNTIME_LIB_DIR})
-    target_link_libraries(drakon PUBLIC GameInput.lib xgameruntime.lib d3d12.lib dxgi.lib)
-    target_compile_definitions(drakon PUBLIC DRAKON_USE_GDK=1)
+if (WIN32)
+    target_link_libraries(drakon PUBLIC d3d12.lib dxgi.lib)
 endif()

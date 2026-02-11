@@ -2,7 +2,7 @@
 
 #include <array>
 
-#if defined(DRAKON_USE_GDK)
+#if defined(WIN32) || defined(_WIN64)
 #include <Windows.h>
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -17,13 +17,13 @@ namespace drakon {
 		void setClearColor(const std::array<float, 4> clearColor);
 		std::array<float, 4>& getClearColor();
 
-#if defined(DRAKON_USE_GDK)
+#if defined(WIN32) || defined(_WIN64)
 		bool init(HWND hwnd);
 #endif
 
 	protected:
 		std::array<float, 4> clearColor = { 0.1f, 0.12f, 0.18f, 1.0f };
-#if defined(DRAKON_USE_GDK)
+#if defined(WIN32) || defined(_WIN64)
 		HWND windowHandle = nullptr;
 		UINT windowWidth = 1280;
 		UINT windowHeight = 720;
