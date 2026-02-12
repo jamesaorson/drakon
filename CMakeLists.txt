@@ -58,6 +58,7 @@ set_target_properties(exokomodo.drakon PROPERTIES VERIFY_INTERFACE_HEADER_SETS O
 add_subdirectory(include/drakon)
 
 if(EXOKOMODO_DRAKON_BUILD_TESTS)
+    include(CTest)
     enable_testing()
     add_subdirectory(tests)
 endif()
