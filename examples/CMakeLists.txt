@@ -1,3 +1,17 @@
-﻿cmake_minimum_required (VERSION 3.10)
+﻿set(
+    ALL_EXAMPLES
+    hello
+)
 
-add_subdirectory ("hello")
+message("Examples to be built: ${ALL_EXAMPLES}")
+
+foreach(example ${ALL_EXAMPLES})
+    add_executable(exokomodo.drakon.examples.${example})
+    set_property(TARGET exokomodo.drakon.examples.${example} PROPERTY CXX_STANDARD 20)
+    target_sources(exokomodo.drakon.examples.${example} PRIVATE ${example}/main.cpp)
+    target_link_libraries(
+        exokomodo.drakon.examples.${example}
+        PRIVATE
+        exokomodo::drakon
+    )
+endforeach()

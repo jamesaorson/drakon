@@ -26,7 +26,9 @@
                 "strategy": "external"
             },
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+              "CMAKE_BUILD_TYPE": "Debug",
+              "EXOKOMODO_DRAKON_BUILD_EXAMPLES": true,
+              "EXOKOMODO_DRAKON_BUILD_TESTS": true
             }
         },
         {
@@ -46,7 +48,9 @@
                 "strategy": "external"
             },
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
+              "CMAKE_BUILD_TYPE": "Debug",
+              "EXOKOMODO_DRAKON_BUILD_EXAMPLES": true,
+              "EXOKOMODO_DRAKON_BUILD_TESTS": true
             }
         },
         {
@@ -54,7 +58,9 @@
             "displayName": "x86 Release",
             "inherits": "x86-debug",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
+              "CMAKE_BUILD_TYPE": "Release",
+              "EXOKOMODO_DRAKON_BUILD_EXAMPLES": true,
+              "EXOKOMODO_DRAKON_BUILD_TESTS": true
             }
         }
     ]
