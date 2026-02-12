@@ -2,7 +2,48 @@
 #include <iostream>
 
 #include <drakon/Game.h>
-#include "renderables/TriangleRenderable.h"
+#include <drakon/Renderable.h>
+#include <drakon/RenderPipeline.h>
+
+#if defined(WIN32) || defined(_WIN64)
+#include <d3d12.h>
+#endif
+
+struct TriangleRenderable : public drakon::Renderable {
+#if defined(WIN32) || defined(_WIN64)
+    TriangleRenderable() {
+		this->pipelineConfig = TriangleRenderable::defaultPipelineConfig;
+	}
+
+    static inline const char* shaderSource =
+        "struct VSOut { float4 pos : SV_Position; float4 color : COLOR0; };"
+        "VSOut VSMain(uint id : SV_VertexID) {"
+        "  float2 positions[3] = { float2(0.0f, 0.5f), float2(0.5f, -0.5f), float2(-0.5f, -0.5f) };"
+        "  float4 colors[3] = { float4(1.0f, 0.0f, 0.0f, 1.0f), float4(0.0f, 1.0f, 0.0f, 1.0f), float4(0.0f, "
+        "0.0f, 1.0f, 1.0f) };"
+        "  VSOut o;"
+        "  o.pos = float4(positions[id], 0.0f, 1.0f);"
+        "  o.color = colors[id];"
+        "  return o;"
+        "}"
+        "float4 PSMain(VSOut input) : SV_Target { return input.color; }";
+
+    static inline drakon::RenderPipelineConfig defaultPipelineConfig =
+        drakon::RenderPipeline::createDefaultPipelineConfig(TriangleRenderable::shaderSource);
+
+    void draw(ID3D12GraphicsCommandList& commandList) override {
+        if (!this->ensurePipeline(commandList))
+            return;
+        if (!this->renderState.pipelineState || !this->renderState.rootSignature)
+            return;
+
+        commandList.SetGraphicsRootSignature(this->renderState.rootSignature.Get());
+        commandList.SetPipelineState(this->renderState.pipelineState.Get());
+        commandList.IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        commandList.DrawInstanced(3, 1, 0, 0);
+    }
+#endif
+};
 
 struct Game : public drakon::Game {
 	// Inherit constructors
