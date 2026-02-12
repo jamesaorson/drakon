@@ -1,7 +1,6 @@
-#include <cassert>
+#include <gtest/gtest.h>
 
-int main()
+TEST(Stub, TrueIsTrue)
 {
-    assert(true);
-    return 0;
+    ASSERT_TRUE(true);
 }
