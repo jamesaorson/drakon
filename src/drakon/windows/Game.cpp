@@ -75,8 +75,8 @@ int drakon::Game::makeWindow() {
                                 WS_OVERLAPPEDWINDOW,
                                 CW_USEDEFAULT,
                                 CW_USEDEFAULT,
-                                1280,
-                                720,
+                                static_cast<int>(this->windowWidth),
+                                static_cast<int>(this->windowHeight),
                                 nullptr,
                                 nullptr,
                                 hInstance,
@@ -88,7 +88,9 @@ int drakon::Game::makeWindow() {
     SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
     ShowWindow(hwnd, SW_SHOW);
 
-    if (!this->renderer.init(hwnd)) {
+    this->windowHandle = hwnd;
+
+    if (!this->renderer.init(this->windowHandle, this->windowWidth, this->windowHeight)) {
         std::cerr << "Failed to initialize renderer." << std::endl;
         return 1;
     }

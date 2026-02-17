@@ -163,8 +163,17 @@ bool drakon::Renderer::createSwapChain() {
     return true;
 }
 
-bool drakon::Renderer::init(HWND hwnd) {
-    this->windowHandle = hwnd;
+bool drakon::Renderer::init(void* windowHandle, uint32_t width, uint32_t height) {
+    if (this->backend == RendererBackend::Vulkan) {
+        std::cerr << "Vulkan backend is not implemented on Windows yet." << std::endl;
+        return false;
+    }
+
+    this->backend      = RendererBackend::DirectX12;
+    this->windowHandle = reinterpret_cast<HWND>(windowHandle);
+    this->windowWidth  = static_cast<UINT>(width);
+    this->windowHeight = static_cast<UINT>(height);
+
     if (!this->createDevice()) {
         return false;
     }

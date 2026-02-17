@@ -1,5 +1,7 @@
 #include <drakon/Renderer.h>
 
+drakon::Renderer::Renderer(RendererBackend backend) : backend(backend) {}
+
 void drakon::Renderer::setClearColor(std::array<float, 4> clearColor) {
     this->clearColor[0] = clearColor[0];
     this->clearColor[1] = clearColor[1];
@@ -8,3 +10,5 @@ void drakon::Renderer::setClearColor(std::array<float, 4> clearColor) {
 }
 
 std::array<float, 4>& drakon::Renderer::getClearColor() { return this->clearColor; }
+
+drakon::RendererBackend drakon::Renderer::getBackend() const { return this->backend; }

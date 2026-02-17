@@ -3,6 +3,10 @@
     hello
 )
 
+if(EXOKOMODO_DRAKON_HAS_VULKAN_BACKEND)
+    list(APPEND ALL_EXAMPLES hello-vulkan)
+endif()
+
 message("Examples to be built: ${ALL_EXAMPLES}")
 
 foreach(example ${ALL_EXAMPLES})

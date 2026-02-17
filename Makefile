@@ -3,6 +3,7 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := help
 .ONESHELL:
 .SILENT:
+MAKEFLAGS += --no-print-directory
 
 ifneq (,$(wildcard ./.env))
     include .env
@@ -13,7 +14,7 @@ UNAME_S := $(shell uname -s)
 
 .PHONY: clean
 clean:
-	echo "Cleaning build artifacts..."
+	cmake --build build --target clean
 
 .PHONY: setup
 setup: setup/glfw setup/vulkan ## Setup development environment
@@ -35,30 +36,45 @@ setup/vulkan: ## Install Vulkan SDK
 	echo "Installing Vulkan SDK..."
 
 .PHONY: configure
-configure: configure/build configure/test ## Configure CMake cache
-
-.PHONY: configure/build
-configure/build: ## Configure CMake cache for build
-	cmake -S . -B build
-
-.PHONY: configure/test
-configure/test: ## Configure CMake cache for testing
-	cmake -S . -B test
+configure: ## Configure CMake cache
+	cmake -S . -B build \
+		-DEXOKOMODO_DRAKON_BUILD_EXAMPLES=ON \
+		-DEXOKOMODO_DRAKON_BUILD_TESTS=ON
 
 .PHONY: build
 build:
-	cmake --build build
+	cmake --build build \
+		--target exokomodo.drakon
 
+.PHONY: list/example
 list/example:
-	ls -1 ./build/examples | grep -E '^exokomodo\.drakon\.examples\.[^\.]+$$' | sed 's/^exokomodo\.drakon\.examples\.//'
+	ls ./examples | grep -v '\.txt$$'
 
-run/example/%:
+run/example/%: build/examples/exokomodo.drakon.examples.%
 	./build/examples/exokomodo.drakon.examples.$*
 
+# File pattern rule to build examples
+build/examples/exokomodo.drakon.examples.%: examples/%/*.cpp
+	cmake \
+		--build build \
+		--target exokomodo.drakon.examples.$*
+
 .PHONY: test
-test:
-	cmake --build test
-	cd test && ctest
+test: test/all ## Build and run all tests
+
+.PHONY: test/all
+test/all: ## Build and run all tests
+	cmake --build build
+	cd build && ctest
+
+.PHONY: test
+test/%: build/tests/exokomodo.drakon.tests.%
+	cd build && ctest -R exokomodo.drakon.tests.$*
+
+build/tests/exokomodo.drakon.tests.%: tests/%.cpp
+	cmake \
+		--build build \
+		--target exokomodo.drakon.tests.$*
 
 .PHONY: format
 format: ## Format code
