@@ -10,6 +10,10 @@ project(
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if(NOT CMAKE_CONFIGURATION_TYPES AND (NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL ""))
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+endif()
+
 option(
     EXOKOMODO_DRAKON_BUILD_TESTS
     "Enable building tests and test infrastructure. Default: ${PROJECT_IS_TOP_LEVEL}. Values: { ON, OFF }."
