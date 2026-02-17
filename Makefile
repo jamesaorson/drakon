@@ -53,11 +53,14 @@ list/example:
 run/example/%: build/examples/exokomodo.drakon.examples.%
 	./build/examples/exokomodo.drakon.examples.$*
 
+CMAKE_BUILD_TYPE ?= Debug
+
 # File pattern rule to build examples
 build/examples/exokomodo.drakon.examples.%: examples/%/*.cpp
 	cmake \
 		--build build \
-		--target exokomodo.drakon.examples.$*
+		--target exokomodo.drakon.examples.$* \
+		--config $(CMAKE_BUILD_TYPE)
 
 .PHONY: test
 test: test/all ## Build and run all tests
