@@ -74,6 +74,12 @@ elseif(UNIX)
 else()
     message(FATAL_ERROR "Unsupported operating system")
 endif()
+
+if(EXOKOMODO_DRAKON_HAS_VULKAN_BACKEND)
+    file(GLOB_RECURSE VULKAN_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/drakon/vulkan/*.cpp")
+    set(OS_SOURCES ${OS_SOURCES} ${VULKAN_SOURCES})
+endif()
+
 target_sources(
     exokomodo.drakon
     PUBLIC
