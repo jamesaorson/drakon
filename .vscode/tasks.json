@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build examples/hello-vulkan",
+			"type": "shell",
+			"command": "make",
+			"presentation": {
+				"reveal": "silent"
+			},
+			"args": [
+				"build/examples/exokomodo.drakon.examples.hello-vulkan",
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+		}
+	]
+}
