@@ -116,7 +116,9 @@ struct Renderer {
     bool               createCommandPool();
     bool               createCommandBuffers();
     bool               createSyncObjects();
-    bool               recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+    bool               recordCommandBuffer(VkCommandBuffer                 commandBuffer,
+                                           uint32_t                        imageIndex,
+                                           const std::vector<Renderable*>& renderables);
     void               destroySwapchainResources();
 #endif
 };

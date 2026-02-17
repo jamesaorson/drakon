@@ -490,7 +490,9 @@ bool drakon::Renderer::createSyncObjects() {
     return true;
 }
 
-bool drakon::Renderer::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) {
+bool drakon::Renderer::recordCommandBuffer(VkCommandBuffer                 commandBuffer,
+                                           uint32_t                        imageIndex,
+                                           const std::vector<Renderable*>& renderables) {
     VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -515,6 +517,12 @@ bool drakon::Renderer::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32
     renderPassInfo.pClearValues          = &clearValue;
 
     vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+    for (auto* renderable : renderables) {
+        if (renderable == nullptr) {
+            continue;
+        }
+        renderable->draw(commandBuffer, this->vkDevice, this->renderPass, this->swapchainExtent);
+    }
     vkCmdEndRenderPass(commandBuffer);
 
     if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
@@ -595,7 +603,7 @@ bool drakon::Renderer::init(void* windowHandle, uint32_t width, uint32_t height)
     return true;
 }
 
-bool drakon::Renderer::render(std::vector<Renderable*>) {
+bool drakon::Renderer::render(std::vector<Renderable*> renderables) {
     vkWaitForFences(this->vkDevice, 1, &this->inFlightFences[this->currentFrame], VK_TRUE, UINT64_MAX);
 
     uint32_t imageIndex    = 0;
@@ -614,7 +622,7 @@ bool drakon::Renderer::render(std::vector<Renderable*>) {
     vkResetFences(this->vkDevice, 1, &this->inFlightFences[this->currentFrame]);
     vkResetCommandBuffer(this->commandBuffers[this->currentFrame], 0);
 
-    if (!this->recordCommandBuffer(this->commandBuffers[this->currentFrame], imageIndex)) {
+    if (!this->recordCommandBuffer(this->commandBuffers[this->currentFrame], imageIndex, renderables)) {
         return false;
     }
 

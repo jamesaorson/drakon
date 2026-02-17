@@ -7,10 +7,17 @@
 #include <wrl/client.h>
 #endif
 
+#if defined(DRAKON_HAS_VULKAN)
+#include <vulkan/vulkan.h>
+#endif
+
 namespace drakon {
 struct Renderable {
 #if defined(WIN32) || defined(_WIN64)
     virtual void draw(ID3D12GraphicsCommandList& commandList) = 0;
+#endif
+#if defined(DRAKON_HAS_VULKAN)
+    virtual void draw(VkCommandBuffer commandBuffer, VkDevice device, VkRenderPass renderPass, VkExtent2D extent) = 0;
 #endif
   protected:
     bool isInitialized = false;
