@@ -54,10 +54,7 @@ struct Game : public drakon::Game {
         this->renderables.push_back(new TriangleRenderable);
     }
 
-    void tick(const drakon::Delta delta) override {
-        std::cout << "Ticking game after " << delta << " seconds" << std::endl;
-        this->updateClearColor(delta);
-    }
+    void tick(const drakon::Delta delta) override { this->updateClearColor(delta); }
 
   private:
     void updateClearColor(const drakon::Delta delta) {
