@@ -11,15 +11,40 @@ on:
 
 jobs:
   ci:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure
-        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            ninja-build \
+            libvulkan-dev \
+            vulkan-sdk
 
-      - name: Build
-        run: cmake --build build --config Release
+      - name: Configure
+        run: |
+          make configure
+
+      - name: Build Drakon Library
+        run: |
+          make build
+
+      - name: Build Drakon Examples
+        run: |
+          make build/all/examples
 
       - name: Test
-        run: ctest --test-dir build --output-on-failure
+        run: |
+          make test
+
+      - name: Upload examples
+        uses: actions/upload-artifact@v6
+        with:
+          name: drakon-examples
+          path: |
+            build/examples/exokomodo.drakon.examples.*
+            examples/*/shaders/**
