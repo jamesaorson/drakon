@@ -56,6 +56,10 @@ run/example/%: build/examples/exokomodo.drakon.examples.%
 
 CMAKE_BUILD_TYPE ?= Debug
 
+.PHONY: build/all/examples
+build/all/examples: ## Build all examples
+	cmake --build build/examples
+
 # File pattern rule to build examples
 build/examples/exokomodo.drakon.examples.%: examples/%/*.cpp
 	cmake \
