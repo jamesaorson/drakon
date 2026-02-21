@@ -18,12 +18,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            build-essential \
-            cmake \
-            libglfw3-dev \
-            ninja-build
+          make setup
       
       - name: Install Vulkan SDK
         uses: humbletim/setup-vulkan-sdk@v1.2.1

@@ -17,7 +17,24 @@ clean:
 	cmake --build build --target clean
 
 .PHONY: setup
-setup: setup/glfw setup/vulkan ## Setup development environment
+setup: setup/common setup/glfw ## Setup development environment
+
+.PHONY: setup/common
+setup/common: ## Install common dependencies
+ifeq ($(UNAME_S),Linux)
+	sudo apt-get update
+	sudo apt-get install -y \
+		build-essential \
+		cmake \
+		ninja-build
+else ifeq ($(UNAME_S),Darwin)
+	brew install \
+		cmake \
+		ninja
+else
+	echo "Unsupported OS: $(UNAME_S)"
+	exit 1
+endif
 
 .PHONY: setup/glfw
 setup/glfw: ## Install GLFW library
@@ -30,10 +47,6 @@ else
 	echo "Unsupported OS: $(UNAME_S)"
 	exit 1
 endif
-
-.PHONY: setup/vulkan
-setup/vulkan: ## Install Vulkan SDK
-	echo "Installing Vulkan SDK..."
 
 .PHONY: configure
 configure: ## Configure CMake cache
