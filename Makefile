@@ -39,7 +39,8 @@ setup/vulkan: ## Install Vulkan SDK
 configure: ## Configure CMake cache
 	cmake -S . -B build \
 		-DEXOKOMODO_DRAKON_BUILD_EXAMPLES=ON \
-		-DEXOKOMODO_DRAKON_BUILD_TESTS=ON
+		-DEXOKOMODO_DRAKON_BUILD_TESTS=ON \
+		-DCMAKE_BUILD_TYPE=$(CMAKE_BUILD_TYPE)
 
 .PHONY: build
 build:
@@ -59,8 +60,7 @@ CMAKE_BUILD_TYPE ?= Debug
 build/examples/exokomodo.drakon.examples.%: examples/%/*.cpp
 	cmake \
 		--build build \
-		--target exokomodo.drakon.examples.$* \
-		--config $(CMAKE_BUILD_TYPE)
+		--target exokomodo.drakon.examples.$*
 
 .PHONY: test
 test: test/all ## Build and run all tests

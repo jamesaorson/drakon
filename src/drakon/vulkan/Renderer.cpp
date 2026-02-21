@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-#if defined(DRAKON_HAS_VULKAN) && defined(DRAKON_HAS_GLFW)
+#if defined(EXOKOMODO_DRAKON_HAS_VULKAN_BACKEND) && defined(EXOKOMODO_DRAKON_HAS_GLFW)
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>

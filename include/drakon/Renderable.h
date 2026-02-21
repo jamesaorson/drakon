@@ -7,7 +7,7 @@
 #include <wrl/client.h>
 #endif
 
-#if defined(DRAKON_HAS_VULKAN)
+#if defined(EXOKOMODO_DRAKON_HAS_VULKAN_BACKEND)
 #include <vulkan/vulkan.h>
 #endif
 
@@ -16,7 +16,7 @@ struct Renderable {
 #if defined(WIN32) || defined(_WIN64)
     virtual void draw(ID3D12GraphicsCommandList& commandList) = 0;
 #endif
-#if defined(DRAKON_HAS_VULKAN)
+#if defined(EXOKOMODO_DRAKON_HAS_VULKAN_BACKEND)
     virtual void draw(VkCommandBuffer commandBuffer, VkDevice device, VkRenderPass renderPass, VkExtent2D extent) = 0;
 #endif
   protected:

@@ -4,13 +4,13 @@
 
 #include <iostream>
 
-#if defined(DRAKON_HAS_GLFW)
+#if defined(EXOKOMODO_DRAKON_HAS_GLFW)
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #endif
 
 int drakon::Game::makeWindow() {
-#if !defined(DRAKON_HAS_GLFW)
+#if !defined(EXOKOMODO_DRAKON_HAS_GLFW)
     std::cerr << "GLFW is required on this platform to create windows." << std::endl;
     return 1;
 #else
@@ -47,7 +47,7 @@ int drakon::Game::makeWindow() {
 }
 
 void drakon::Game::processEvents() {
-#if defined(DRAKON_HAS_GLFW)
+#if defined(EXOKOMODO_DRAKON_HAS_GLFW)
     glfwPollEvents();
     if (this->windowHandle != nullptr) {
         auto* window = reinterpret_cast<GLFWwindow*>(this->windowHandle);
@@ -61,7 +61,7 @@ void drakon::Game::processEvents() {
 void drakon::Game::cleanup() {
     this->renderer.cleanup();
 
-#if defined(DRAKON_HAS_GLFW)
+#if defined(EXOKOMODO_DRAKON_HAS_GLFW)
     if (this->windowHandle != nullptr) {
         glfwDestroyWindow(reinterpret_cast<GLFWwindow*>(this->windowHandle));
         this->windowHandle = nullptr;
