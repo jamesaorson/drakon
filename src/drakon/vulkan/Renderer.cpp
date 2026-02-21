@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <limits>
@@ -710,6 +711,24 @@ bool drakon::Renderer::cleanup() {
     return true;
 }
 
+bool drakon::Renderer::compileGlslShader(const std::string& filename) const {
+    if (filename.empty()) {
+        std::cerr << "Shader filename cannot be empty." << std::endl;
+        return false;
+    }
+
+    const std::string outputFilename = filename + ".spv";
+    const std::string command        = "glslc \"" + filename + "\" -o \"" + outputFilename + "\"";
+
+    const int result = std::system(command.c_str());
+    if (result != 0) {
+        std::cerr << "Failed to compile GLSL shader: " << filename << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
 #else
 
 bool drakon::Renderer::init(void*, uint32_t, uint32_t) {
@@ -720,6 +739,11 @@ bool drakon::Renderer::init(void*, uint32_t, uint32_t) {
 bool drakon::Renderer::render(std::vector<Renderable*>) { return false; }
 
 bool drakon::Renderer::cleanup() { return true; }
+
+bool drakon::Renderer::compileGlslShader(const std::string&) const {
+    std::cerr << "Vulkan backend requires both Vulkan SDK and GLFW to be available at build time." << std::endl;
+    return false;
+}
 
 #endif
 

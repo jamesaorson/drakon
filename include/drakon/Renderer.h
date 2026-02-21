@@ -36,6 +36,9 @@ struct Renderer {
     void                  setClearColor(const std::array<float, 4> clearColor);
     std::array<float, 4>& getClearColor();
     RendererBackend       getBackend() const;
+#if defined(EXOKOMODO_DRAKON_HAS_VULKAN_BACKEND)
+    bool compileGlslShader(const std::string& filename) const;
+#endif
 
     bool init(void* windowHandle, uint32_t width, uint32_t height);
 
