@@ -1,10 +1,15 @@
-﻿set(
-    ALL_EXAMPLES
-    hello
-)
+﻿if(WIN32)
+    set(
+        ALL_EXAMPLES
+        hello-directx
+    )
+endif()
 
 if(EXOKOMODO_DRAKON_HAS_VULKAN_BACKEND)
-    list(APPEND ALL_EXAMPLES hello-vulkan)
+    set(
+        ALL_EXAMPLES
+        hello-vulkan
+    )
 endif()
 
 message("Examples to be built: ${ALL_EXAMPLES}")
