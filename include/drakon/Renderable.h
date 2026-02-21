@@ -1,32 +1,17 @@
 #pragma once
 
-#if defined(WIN32) || defined(_WIN64)
-#include <drakon/RenderPipeline.h>
-
-#include <d3d12.h>
-#include <wrl/client.h>
-#endif
+#include <vulkan/vulkan.h>
 
 namespace drakon {
 struct Renderable {
-#if defined(WIN32) || defined(_WIN64)
-    virtual void draw(ID3D12GraphicsCommandList& commandList) = 0;
-#endif
+    virtual void draw(VkCommandBuffer commandBuffer, VkDevice device, VkRenderPass renderPass, VkExtent2D extent) = 0;
+
   protected:
     bool isInitialized = false;
 
-#if defined(WIN32) || defined(_WIN64)
-    RenderPipelineConfig pipelineConfig = RenderPipeline::createDefaultPipelineConfig(nullptr);
-    RenderPipelineState  renderState;
+    VkPipelineLayout pipelineLayout   = VK_NULL_HANDLE;
+    VkPipeline       graphicsPipeline = VK_NULL_HANDLE;
 
-    bool ensurePipeline(ID3D12GraphicsCommandList& commandList) {
-        if (this->isInitialized)
-            return true;
-        if (RenderPipeline::initialize(commandList, this->pipelineConfig, this->renderState)) {
-            this->isInitialized = true;
-        }
-        return this->isInitialized;
-    }
-#endif
+    bool ensurePipeline(VkDevice device, VkRenderPass renderPass, VkExtent2D extent);
 };
 } // namespace drakon

@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          make setup
+      
+      - name: Install Vulkan SDK
+        uses: humbletim/setup-vulkan-sdk@v1.2.1
+        with:
+          vulkan-query-version: latest
+          vulkan-components: Vulkan-Headers, Vulkan-Loader
+          vulkan-use-cache: true
+
+      - name: Configure
+        run: |
+          make configure
+
+      - name: Build Drakon Library
+        run: |
+          make build
+
+      - name: Build Drakon Examples
+        run: |
+          make build/all/examples
+
+      - name: Test
+        run: |
+          make test
+
+      - name: Upload examples
+        uses: actions/upload-artifact@v6
+        with:
+          name: drakon-examples
+          path: |
+            build/examples/exokomodo.drakon.examples.*
+            examples/*/shaders/**

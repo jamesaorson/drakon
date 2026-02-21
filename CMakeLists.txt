@@ -8,6 +8,8 @@ project(
     VERSION 0.1.0
 )
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 option(
     EXOKOMODO_DRAKON_BUILD_TESTS
     "Enable building tests and test infrastructure. Default: ${PROJECT_IS_TOP_LEVEL}. Values: { ON, OFF }."
@@ -25,26 +27,31 @@ add_library(exokomodo::drakon ALIAS exokomodo.drakon)
 
 set_property(TARGET exokomodo.drakon PROPERTY CXX_STANDARD 20)
 
-## Common Sources
-file(GLOB_RECURSE COMMON_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/drakon/common/*.cpp")
+find_package(glfw3 REQUIRED)
+find_package(Vulkan REQUIRED)
 
-## OS Sources
-if(WIN32)
-    file(GLOB_RECURSE OS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/drakon/windows/*.cpp")
-elseif(APPLE)
-    file(GLOB_RECURSE OS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/drakon/darwin/*.cpp")
-elseif(UNIX)
-    file(GLOB_RECURSE OS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/drakon/linux/*.cpp")
+if(TARGET glfw)
+    target_link_libraries(exokomodo.drakon PRIVATE glfw)
+elseif(TARGET glfw::glfw)
+    target_link_libraries(exokomodo.drakon PRIVATE glfw::glfw)
 else()
-    message(FATAL_ERROR "Unsupported operating system")
+    message(FATAL_ERROR "GLFW package was found but did not provide a supported target (glfw or glfw::glfw).")
 endif()
+
+target_link_libraries(exokomodo.drakon PRIVATE Vulkan::Vulkan)
+
+message(STATUS "GLFW was found.")
+message(STATUS "Vulkan SDK was found.")
+
+file(GLOB_RECURSE CPP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/drakon/*.cpp")
+
 target_sources(
     exokomodo.drakon
     PUBLIC
         FILE_SET HEADERS
         BASE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include"
     PRIVATE
-        ${COMMON_SOURCES} ${OS_SOURCES}
+        ${CPP_SOURCES}
 )
 target_include_directories(
     exokomodo.drakon
@@ -52,10 +59,7 @@ target_include_directories(
         "${CMAKE_CURRENT_SOURCE_DIR}/include"
 )
 
-
 set_target_properties(exokomodo.drakon PROPERTIES VERIFY_INTERFACE_HEADER_SETS ON)
-
-add_subdirectory(include/drakon)
 
 if(EXOKOMODO_DRAKON_BUILD_TESTS)
     include(CTest)
