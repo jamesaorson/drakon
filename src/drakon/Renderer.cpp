@@ -1,5 +1,3 @@
-#if !defined(WIN32) && !defined(_WIN64)
-
 #include <drakon/Renderer.h>
 
 #include <algorithm>
@@ -12,8 +10,6 @@
 #include <string>
 #include <vector>
 
-#if defined(EXOKOMODO_DRAKON_HAS_VULKAN_BACKEND) && defined(EXOKOMODO_DRAKON_HAS_GLFW)
-#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <GLFW/glfw3native.h>
 
@@ -125,6 +121,19 @@ bool checkDeviceExtensionSupport(VkPhysicalDevice device) {
     return requiredExtensions.empty();
 }
 } // namespace
+
+drakon::Renderer::Renderer(RendererBackend backend) : backend(backend) {}
+
+void drakon::Renderer::setClearColor(std::array<float, 4> clearColor) {
+    this->clearColor[0] = clearColor[0];
+    this->clearColor[1] = clearColor[1];
+    this->clearColor[2] = clearColor[2];
+    this->clearColor[3] = clearColor[3];
+}
+
+std::array<float, 4>& drakon::Renderer::getClearColor() { return this->clearColor; }
+
+drakon::RendererBackend drakon::Renderer::getBackend() const { return this->backend; }
 
 bool drakon::Renderer::createVulkanInstance() {
     if (ENABLE_VALIDATION && !checkValidationLayerSupport()) {
@@ -557,11 +566,6 @@ void drakon::Renderer::destroySwapchainResources() {
 }
 
 bool drakon::Renderer::init(void* windowHandle, uint32_t width, uint32_t height) {
-    if (this->backend == RendererBackend::DirectX12) {
-        std::cerr << "DirectX12 backend is not available on this platform." << std::endl;
-        return false;
-    }
-
     this->backend            = RendererBackend::Vulkan;
     this->nativeWindowHandle = windowHandle;
     this->windowWidth        = width;
@@ -728,23 +732,3 @@ bool drakon::Renderer::compileGlslShader(const std::string& filename) const {
 
     return true;
 }
-
-#else
-
-bool drakon::Renderer::init(void*, uint32_t, uint32_t) {
-    std::cerr << "Vulkan backend requires both Vulkan SDK and GLFW to be available at build time." << std::endl;
-    return false;
-}
-
-bool drakon::Renderer::render(std::vector<Renderable*>) { return false; }
-
-bool drakon::Renderer::cleanup() { return true; }
-
-bool drakon::Renderer::compileGlslShader(const std::string&) const {
-    std::cerr << "Vulkan backend requires both Vulkan SDK and GLFW to be available at build time." << std::endl;
-    return false;
-}
-
-#endif
-
-#endif

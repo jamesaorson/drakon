@@ -6,7 +6,6 @@
 #include <drakon/Game.h>
 #include <drakon/Renderable.h>
 
-#if defined(EXOKOMODO_DRAKON_HAS_VULKAN_BACKEND)
 namespace {
 std::vector<char> readFile(const std::filesystem::path& path) {
     std::ifstream file(path, std::ios::ate | std::ios::binary);
@@ -200,7 +199,6 @@ struct TriangleRenderable : public drakon::Renderable {
         return true;
     }
 };
-#endif
 
 struct Game : public drakon::Game {
     using drakon::Game::Game;
@@ -209,7 +207,6 @@ struct Game : public drakon::Game {
 
     void init() override {
         std::cout << "Initializing Vulkan game" << std::endl;
-#if defined(EXOKOMODO_DRAKON_HAS_VULKAN_BACKEND)
         const std::filesystem::path shaderDirectory = std::filesystem::path(__FILE__).parent_path() / "shaders";
 
         if (!this->renderer.compileGlslShader((shaderDirectory / "triangle.vert").string())) {
@@ -222,7 +219,6 @@ struct Game : public drakon::Game {
         }
 
         this->renderables.push_back(new TriangleRenderable(shaderDirectory));
-#endif
     }
 
     void tick(const drakon::Delta delta) override { this->updateClearColor(delta); }

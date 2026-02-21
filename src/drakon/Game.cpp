@@ -1,19 +1,38 @@
-#if !defined(WIN32) && !defined(_WIN64)
-
 #include <drakon/Game.h>
 
 #include <iostream>
 
-#if defined(EXOKOMODO_DRAKON_HAS_GLFW)
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#endif
+
+#include <chrono>
+
+void drakon::Game::run() {
+    // Init before tracking time
+    this->init();
+
+    if (this->makeWindow() != 0) {
+        this->cleanup();
+        return;
+    }
+
+    auto          startTime = std::chrono::steady_clock::now();
+    drakon::Delta delta     = 0;
+    while (this->isRunning) {
+        auto                                 currentTime = std::chrono::steady_clock::now();
+        std::chrono::duration<drakon::Delta> duration    = currentTime - startTime;
+        delta                                            = duration.count();
+        startTime                                        = currentTime;
+        this->processEvents();
+        // First frame will always have a near-0 value
+        this->tick(delta);
+        this->renderer.render(this->renderables);
+    }
+    this->done();
+    this->cleanup();
+}
 
 int drakon::Game::makeWindow() {
-#if !defined(EXOKOMODO_DRAKON_HAS_GLFW)
-    std::cerr << "GLFW is required on this platform to create windows." << std::endl;
-    return 1;
-#else
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW." << std::endl;
         return 1;
@@ -43,11 +62,9 @@ int drakon::Game::makeWindow() {
     }
 
     return 0;
-#endif
 }
 
 void drakon::Game::processEvents() {
-#if defined(EXOKOMODO_DRAKON_HAS_GLFW)
     glfwPollEvents();
     if (this->windowHandle != nullptr) {
         auto* window = reinterpret_cast<GLFWwindow*>(this->windowHandle);
@@ -55,19 +72,14 @@ void drakon::Game::processEvents() {
             this->isRunning = false;
         }
     }
-#endif
 }
 
 void drakon::Game::cleanup() {
     this->renderer.cleanup();
 
-#if defined(EXOKOMODO_DRAKON_HAS_GLFW)
     if (this->windowHandle != nullptr) {
         glfwDestroyWindow(reinterpret_cast<GLFWwindow*>(this->windowHandle));
         this->windowHandle = nullptr;
     }
     glfwTerminate();
-#endif
 }
-
-#endif
