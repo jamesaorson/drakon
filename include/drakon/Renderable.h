@@ -34,6 +34,11 @@ struct Renderable {
         }
         return this->isInitialized;
     }
+#else if defined(EXOKOMODO_DRAKON_HAS_VULKAN_BACKEND)
+    VkPipelineLayout pipelineLayout   = VK_NULL_HANDLE;
+    VkPipeline       graphicsPipeline = VK_NULL_HANDLE;
+
+    bool ensurePipeline(VkDevice device, VkRenderPass renderPass, VkExtent2D extent);
 #endif
 };
 } // namespace drakon

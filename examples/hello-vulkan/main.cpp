@@ -61,8 +61,6 @@ struct TriangleRenderable : public drakon::Renderable {
 
   private:
     std::filesystem::path shaderDirectory;
-    VkPipelineLayout      pipelineLayout   = VK_NULL_HANDLE;
-    VkPipeline            graphicsPipeline = VK_NULL_HANDLE;
 
     bool ensurePipeline(VkDevice device, VkRenderPass renderPass, VkExtent2D extent) {
         if (this->graphicsPipeline != VK_NULL_HANDLE) {
